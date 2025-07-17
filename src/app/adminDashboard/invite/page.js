@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from '../../../../page.module.css';
 import Link from 'next/link';
-import back from '../../../../public/back-button.png'
+import AdminSidebar from '@/app/components/AdminSidebar';
 
 export default function AdminInvitePage() {
   const router = useRouter();
@@ -108,10 +108,11 @@ export default function AdminInvitePage() {
   };
 
   return (
-    <div className={styles.container}>
-       <Link href="/adminDashboard"> <img className={styles.backButton} src={back.src}/></Link>
+    <div className={styles.sidebarLayout}>
+      <AdminSidebar />
+      <main className={styles.mainContent}>
 
-      <div className={styles.card}>
+      <div className={styles.mainCard}>
         <div className={styles.cardHeader}>
           <h1 className={styles.title}>Manage Team Invites</h1>
           <p className={styles.subtitle}>Send and track team invitations</p>
@@ -197,6 +198,7 @@ export default function AdminInvitePage() {
           </div>
         )}
       </div>
+      </main>
     </div>
   );
 }

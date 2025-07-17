@@ -4,8 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import styles from '../../../../page.module.css';
 import Link from 'next/link';
-import back from '../../../../public/back-button.png'
-
+import AdminSidebar from '@/app/components/AdminSidebar';
 export default function AdminViewStandupsPage() {
   const router = useRouter();
   const { data: session, status } = useSession();
@@ -112,9 +111,10 @@ export default function AdminViewStandupsPage() {
   }
 
   return (
-    <div className={styles.container}>
-       <Link href="/adminDashboard"> <img className={styles.backButton} src={back.src}/></Link>
-      <div className={styles.card}>
+    <div className={styles.sidebarLayout}>
+      <AdminSidebar />
+      <main className={styles.mainContent}>
+      <div className={styles.mainCard}>
         <div style={{ marginBottom: '24px' }}>
           <h1 style={{ fontSize: '24px', fontWeight: '600', margin: '0' , color:'white'}}>Team Standups</h1>
           <p style={{ color: 'white', marginTop: '8px' }}>View all team standups</p>
@@ -368,6 +368,7 @@ export default function AdminViewStandupsPage() {
           </div>
         )}
       </div>
+      </main>
     </div>
   );
 }

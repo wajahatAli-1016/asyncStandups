@@ -4,8 +4,8 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import styles from '../../../../page.module.css';
 import { parse, format } from 'date-fns';
-import back from '../../../../public/back-button.png'
 import Link from 'next/link';
+import AdminSidebar from '@/app/components/AdminSidebar';
 
 export default function CreateTeam() {
   const router = useRouter();
@@ -60,7 +60,7 @@ export default function CreateTeam() {
       }
 
       // Redirect to team management page on success
-      router.push('/adminDashboard/manage-teams');
+      router.push('/adminDashboard/teams');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -72,7 +72,7 @@ export default function CreateTeam() {
   if (status === 'loading') {
     return (
       <div className={styles.container}>
-        <div className={styles.card}>
+        <div className={styles.mainCard}>
           <h1 className={styles.title}>Loading...</h1>
         </div>
       </div>
@@ -85,9 +85,10 @@ export default function CreateTeam() {
   }
 
   return (
-    <div className={styles.container}>
-       <Link href="/adminDashboard"> <img className={styles.backButton} src={back.src}/></Link>
-      <div className={styles.card}>
+    <div className={styles.sidebarLayout}>
+      <AdminSidebar />
+      <main className={styles.mainContent}>
+        <div className={styles.mainCard}>
         <h1 className={styles.title}>Create New Team</h1>
         {error && <p className={styles.error}>{error}</p>}
         <form className={styles.form} onSubmit={handleSubmit}>
@@ -138,7 +139,8 @@ export default function CreateTeam() {
             {isSubmitting ? 'Creating Team...' : 'Create Team'}
           </button>
         </form>
-      </div>
+        </div>
+      </main>
     </div>
   );
 }
