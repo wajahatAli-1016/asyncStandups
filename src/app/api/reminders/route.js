@@ -35,7 +35,9 @@ export async function GET(request) {
 
       const teamIds = adminTeams.map(team => team._id);
       
-      const query = teamId ? { teamId } : { teamId: { $in: teamIds } };
+      const query = teamId 
+        ? { teamId, isActive: true } 
+        : { teamId: { $in: teamIds }, isActive: true };
       
       reminders = await Reminder.find(query)
         .sort({ dueDate: 1, dueTime: 1 });

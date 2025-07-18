@@ -28,10 +28,26 @@ export default function AdminRemindersPage() {
     dueDate: '',
     dueTime: '',
     teamId: '',
-    assignedTo: [],
+    assignedTo: [], // Ensure this is initialized as an empty array
     isRecurring: false,
     recurringPattern: ''
   });
+
+  // Reset form function
+  const resetForm = () => {
+    setFormData({
+      title: '',
+      description: '',
+      type: 'general',
+      priority: 'medium',
+      dueDate: '',
+      dueTime: '',
+      teamId: selectedTeam,
+      assignedTo: [], // Ensure this is reset to an empty array
+      isRecurring: false,
+      recurringPattern: ''
+    });
+  };
 
   // Redirect if not authenticated or not admin
   useEffect(() => {
@@ -107,6 +123,7 @@ export default function AdminRemindersPage() {
         console.log('Team members response:', data); // Debug log
         if (response.ok) {
           // Include both members and admins, but exclude the current user to avoid self-assignment issues
+          console.log('Setting team members:', data.members || []);
           setTeamMembers(data.members || []);
         }
       } catch (error) {
@@ -118,19 +135,51 @@ export default function AdminRemindersPage() {
     fetchTeamMembers();
   }, [selectedTeam]);
 
+  // Add useEffect to log form state changes
+  useEffect(() => {
+    console.log('Form data changed:', formData);
+  }, [formData]);
+
+  // Modify handleFormChange for checkbox
   const handleFormChange = (e) => {
     const { name, value, type, checked } = e.target;
     
+    console.log('handleFormChange called:', { name, value, type, checked });
+    
     if (name === 'assignedTo') {
-      const userId = value;
-      const isChecked = checked;
+      // Ensure we're working with an array
+      const currentAssigned = Array.isArray(formData.assignedTo) ? formData.assignedTo : [];
       
-      setFormData(prev => ({
-        ...prev,
-        assignedTo: isChecked 
-          ? [...prev.assignedTo, userId]
-          : prev.assignedTo.filter(id => id !== userId)
-      }));
+      console.log('Current assignedTo:', currentAssigned);
+      console.log('Member ID:', value, 'Checked:', checked);
+      
+      if (checked) {
+        // Add the member ID if it's not already in the array
+        if (!currentAssigned.includes(value)) {
+          console.log('Adding member to assignedTo');
+          setFormData(prev => {
+            const newAssigned = [...currentAssigned, value];
+            console.log('New assignedTo array:', newAssigned);
+            return {
+              ...prev,
+              assignedTo: newAssigned
+            };
+          });
+        } else {
+          console.log('Member already in assignedTo array');
+        }
+      } else {
+        // Remove the member ID
+        console.log('Removing member from assignedTo');
+        setFormData(prev => {
+          const newAssigned = currentAssigned.filter(id => id !== value);
+          console.log('New assignedTo array after removal:', newAssigned);
+          return {
+            ...prev,
+            assignedTo: newAssigned
+          };
+        });
+      }
     } else if (type === 'checkbox') {
       setFormData(prev => ({ ...prev, [name]: checked }));
     } else {
@@ -138,6 +187,30 @@ export default function AdminRemindersPage() {
     }
   };
 
+  // Add console log when rendering checkboxes
+  const renderMemberCheckboxes = () => {
+    console.log('Current assignedTo state:', formData.assignedTo);
+    return teamMembers.map(member => (
+      <label key={member._id} style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        gap: '0.5rem',
+        color: '#f3f4f6',
+        cursor: 'pointer'
+      }}>
+        <input
+          type="checkbox"
+          name="assignedTo"
+          value={member._id}
+          checked={formData.assignedTo.includes(member._id)}
+          onChange={handleFormChange}
+        />
+        {member.name} ({member.email})
+      </label>
+    ));
+  };
+
+  // Modify handleCreateReminder to use resetForm
   const handleCreateReminder = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -170,19 +243,8 @@ export default function AdminRemindersPage() {
       setSuccessMessage('Reminder created successfully!');
       setShowCreateForm(false);
       
-      // Reset form
-      setFormData({
-        title: '',
-        description: '',
-        type: 'general',
-        priority: 'medium',
-        dueDate: '',
-        dueTime: '',
-        teamId: selectedTeam,
-        assignedTo: [],
-        isRecurring: false,
-        recurringPattern: ''
-      });
+      // Use the reset function
+      resetForm();
 
       // Refresh reminders
       const updatedResponse = await fetch(`/api/reminders?teamId=${selectedTeam}`);
@@ -203,11 +265,13 @@ export default function AdminRemindersPage() {
     if (!confirm('Are you sure you want to delete this reminder?')) return;
 
     try {
+      console.log('Attempting to delete reminder:', reminderId);
       const response = await fetch(`/api/reminders/${reminderId}`, {
         method: 'DELETE',
       });
 
       const data = await response.json();
+      console.log('Delete response:', { status: response.status, data });
 
       if (!response.ok) {
         throw new Error(data.error || 'Failed to delete reminder');
@@ -216,8 +280,11 @@ export default function AdminRemindersPage() {
       setSuccessMessage('Reminder deleted successfully!');
       
       // Refresh reminders
+      console.log('Refreshing reminders list...');
       const updatedResponse = await fetch(`/api/reminders?teamId=${selectedTeam}`);
       const updatedData = await updatedResponse.json();
+      console.log('Updated reminders:', updatedData);
+      
       if (updatedResponse.ok) {
         setReminders(updatedData.reminders);
       }
@@ -291,7 +358,7 @@ export default function AdminRemindersPage() {
         <div className={styles.filterSection}>
           <label className={styles.label}>Select Team:</label>
           <select
-            className={styles.select}
+            className={styles.select + ' ' + styles.selectTeam}
             value={selectedTeam}
             onChange={(e) => setSelectedTeam(e.target.value)}
           >
@@ -406,24 +473,39 @@ export default function AdminRemindersPage() {
                 gap: '0.5rem',
                 marginTop: '0.5rem'
               }}>
-                {teamMembers.map(member => (
-                  <label key={member._id} style={{ 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '0.5rem',
-                    color: '#f3f4f6',
-                    cursor: 'pointer'
-                  }}>
-                    <input
-                      type="checkbox"
-                      name="assignedTo"
-                      value={member._id}
-                      checked={formData.assignedTo.includes(member._id)}
-                      onChange={handleFormChange}
-                    />
-                    {member.name} ({member.email})
-                  </label>
-                ))}
+                {teamMembers.map(member => {
+                  const memberId = member.id || member._id; // Use id first, fallback to _id
+                  const isChecked = formData.assignedTo.includes(memberId);
+                  console.log(`Rendering checkbox for ${member.name} (${memberId}):`, {
+                    isChecked,
+                    assignedToArray: formData.assignedTo,
+                    memberId: memberId,
+                    memberObject: member
+                  });
+                  
+                  return (
+                    <label key={memberId} style={{ 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      gap: '0.5rem',
+                      color: '#f3f4f6',
+                      cursor: 'pointer',
+                      padding: '0.5rem',
+                      backgroundColor: isChecked ? 'rgba(59, 130, 246, 0.1)' : 'transparent',
+                      borderRadius: '0.25rem'
+                    }}>
+                      <input
+                        type="checkbox"
+                        name="assignedTo"
+                        value={memberId}
+                        checked={isChecked}
+                        onChange={handleFormChange}
+                        style={{ cursor: 'pointer' }}
+                      />
+                      <span>{member.name} ({member.email})</span>
+                    </label>
+                  );
+                })}
               </div>
               {teamMembers.length === 0 && (
                 <p style={{ color: '#9ca3af', marginTop: '0.5rem' }}>
@@ -446,75 +528,91 @@ export default function AdminRemindersPage() {
         {reminders.length > 0 && (
           <div className={styles.invitesList}>
             <h2 className={styles.subtitle}>Team Reminders</h2>
-            <div className={styles.table}>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Type</th>
-                    <th>Priority</th>
-                    <th>Due Date/Time</th>
-                    <th>Assigned To</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {reminders.map(reminder => (
-                    <tr key={reminder.id}>
-                      <td>
-                        <strong>{reminder.title}</strong>
-                        <br />
-                        <small style={{ color: '#9ca3af' }}>{reminder.description}</small>
-                      </td>
-                      <td style={{ textTransform: 'capitalize' }}>{reminder.type}</td>
-                      <td>
-                        <span style={{ 
-                          color: getPriorityColor(reminder.priority),
-                          fontWeight: 'bold',
-                          textTransform: 'capitalize'
-                        }}>
-                          {reminder.priority}
-                        </span>
-                      </td>
-                      <td>
-                        {formatDate(reminder.dueDate)}
-                        <br />
-                        <small>{reminder.dueTime}</small>
-                      </td>
-                      <td>
-                        {reminder.assignedTo.map(assignment => (
-                          <div key={assignment.userId} style={{ marginBottom: '0.25rem' }}>
-                            {assignment.user?.name}
-                          </div>
-                        ))}
-                      </td>
-                      <td>
-                        {reminder.assignedTo.map(assignment => (
-                          <div key={assignment.userId} style={{ marginBottom: '0.25rem' }}>
+            <div className={styles.tableContainer}>
+              <div className={styles.table}>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Title</th>
+                      <th>Type</th>
+                      <th>Priority</th>
+                      <th>Due Date/Time</th>
+                      <th>Assigned To</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {reminders.map(reminder => {
+                      const reminderId = reminder._id || reminder.id;
+                      return (
+                        <tr key={reminderId}>
+                          <td>
+                            <div className={styles.tableCellContent}>
+                              <strong>{reminder.title}</strong>
+                              <br />
+                              <small style={{ color: '#9ca3af' }}>{reminder.description}</small>
+                            </div>
+                          </td>
+                          <td style={{ textTransform: 'capitalize' }}>{reminder.type}</td>
+                          <td>
                             <span style={{ 
-                              color: getStatusColor(assignment.status),
-                              fontSize: '0.8rem',
+                              color: getPriorityColor(reminder.priority),
+                              fontWeight: 'bold',
                               textTransform: 'capitalize'
                             }}>
-                              {assignment.status}
+                              {reminder.priority}
                             </span>
-                          </div>
-                        ))}
-                      </td>
-                      <td>
-                        <button
-                          className={styles.acceptButton}
-                          onClick={() => handleDeleteReminder(reminder.id)}
-                          style={{ backgroundColor: '#ef4444' }}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                          </td>
+                          <td>
+                            <div className={styles.tableCellContent}>
+                              {formatDate(reminder.dueDate)}
+                              <br />
+                              <small>{reminder.dueTime}</small>
+                            </div>
+                          </td>
+                          <td>
+                            <div className={styles.tableCellContent}>
+                              {reminder.assignedTo.map(assignment => (
+                                <div key={assignment.userId} style={{ marginBottom: '0.25rem' }}>
+                                  {assignment.user?.name}
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                          <td>
+                            <div className={styles.tableCellContent}>
+                              {reminder.assignedTo.map(assignment => (
+                                <div key={assignment.userId} style={{ marginBottom: '0.25rem' }}>
+                                  <span style={{ 
+                                    color: getStatusColor(assignment.status),
+                                    fontSize: '0.8rem',
+                                    textTransform: 'capitalize'
+                                  }}>
+                                    {assignment.status}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </td>
+                          <td>
+                            <div className={styles.tableActions}>
+                              <button
+                                className={styles.acceptButton}
+                                onClick={() => handleDeleteReminder(reminderId)}
+                                style={{ backgroundColor: '#ef4444' }}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              <div className={styles.tableScrollIndicator} />
             </div>
           </div>
         )}

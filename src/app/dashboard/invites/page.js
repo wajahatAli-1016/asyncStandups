@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import styles from '../../../../page.module.css';
 import Link from 'next/link';
 import back from '../../../../public/back-button.png'
+import MemberSidebar from '@/app/components/MemberSidebar';
 
 export default function InvitesPage() {
   const router = useRouter();
@@ -91,9 +92,10 @@ export default function InvitesPage() {
   }
 
   return (
-    <div className={styles.container}>
-       <Link href="/adminDashboard"> <img className={styles.backButton} src={back.src}/></Link>
-      <div className={styles.card}>
+    <div className={styles.sidebarLayout}>
+      <MemberSidebar/>
+      <main className={styles.mainContent}>
+      <div className={styles.mainCard}>
         <h1 className={styles.title}>Team Invites</h1>
         
         {error && <p className={styles.error}>{error}</p>}
@@ -109,7 +111,7 @@ export default function InvitesPage() {
                   <th>Invited By</th>
                   <th>Sent At</th>
                   <th>Status</th>
-                  <th>Action</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -140,6 +142,7 @@ export default function InvitesPage() {
           </div>
         )}
       </div>
+      </main>
     </div>
   );
 } 

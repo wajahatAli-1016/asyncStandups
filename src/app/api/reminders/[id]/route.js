@@ -24,8 +24,16 @@ export async function PUT(request, { params }) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    const reminder = await Reminder.findById(id);
+    // Try to find reminder by both _id and id
+    let reminder = await Reminder.findById(id);
+    
     if (!reminder) {
+      // If not found by _id, try to find by the virtual id field
+      reminder = await Reminder.findOne({ _id: id });
+    }
+
+    if (!reminder) {
+      console.error('Reminder not found:', { id, user: user.email });
       return NextResponse.json({ error: 'Reminder not found' }, { status: 404 });
     }
 
@@ -121,8 +129,16 @@ export async function DELETE(request, { params }) {
       return NextResponse.json({ error: 'Only admins can delete reminders' }, { status: 403 });
     }
 
-    const reminder = await Reminder.findById(id);
+    // Try to find reminder by both _id and id
+    let reminder = await Reminder.findById(id);
+    
     if (!reminder) {
+      // If not found by _id, try to find by the virtual id field
+      reminder = await Reminder.findOne({ _id: id });
+    }
+
+    if (!reminder) {
+      console.error('Reminder not found:', { id, user: user.email });
       return NextResponse.json({ error: 'Reminder not found' }, { status: 404 });
     }
 
@@ -138,9 +154,8 @@ export async function DELETE(request, { params }) {
       }, { status: 403 });
     }
 
-    // Soft delete by setting isActive to false
-    reminder.isActive = false;
-    await reminder.save();
+    // Actually delete the reminder instead of soft delete
+    await Reminder.findByIdAndDelete(reminder._id);
 
     return NextResponse.json({ message: 'Reminder deleted successfully' });
 

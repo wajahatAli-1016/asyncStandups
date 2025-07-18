@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import styles from '../../../../page.module.css';
 import Link from 'next/link';
 import back from '../../../../public/back-button.png'
+import MemberSidebar from '@/app/components/MemberSidebar';
 
 export default function JoinTeamPage() {
   const router = useRouter();
@@ -118,11 +119,10 @@ export default function JoinTeamPage() {
   }
 
   return (
-    <div className={styles.container}>
-      
-      <Link href="/adminDashboard"> <img className={styles.backButton} src={back.src}/></Link>
-      
-      <div className={styles.card}>
+    <div className={styles.sidebarLayout}>
+      <MemberSidebar/>
+      <main className={styles.mainContent}>
+      <div className={styles.mainCard}>
         <div className={styles.cardHeader}>
           <h1 className={styles.title}>Join Team</h1>
           <p className={styles.subtitle}>Accept team invitations to join teams</p>
@@ -221,6 +221,7 @@ export default function JoinTeamPage() {
           </div>
         )}
       </div>
+      </main>
     </div>
   );
 }

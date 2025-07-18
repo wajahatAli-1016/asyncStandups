@@ -1,5 +1,3 @@
-
-
 .container {
   min-height: 100vh;
   padding: 2rem;
@@ -120,6 +118,21 @@
   border: 1px solid #059669;
 }
 
+.memberSidebarUserName {
+  width: 40px;
+  height: 40px;
+
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: #065f46;
+  color: #a7f3d0;
+  border: 1px solid #059669;
+}
+
 .userIcon {
   width: 24px;
   height: 24px;
@@ -142,17 +155,26 @@
   max-width: 600px;
   border: 1px solid #374151;
 }
+
 .table {
   width: 100%;
-  border-collapse: collapse; /* Makes the borders collapse into a single line */
+  border-collapse: collapse;
+  /* Makes the borders collapse into a single line */
 }
-.tableHeader, .tableCell {
-  border: 1px solid black; /* Adds borders around the cells */
-  padding: 8px; /* Adds space inside the cells */
-  text-align: left; /* Aligns text to the left */
+
+.tableHeader,
+.tableCell {
+  border: 1px solid black;
+  /* Adds borders around the cells */
+  padding: 8px;
+  /* Adds space inside the cells */
+  text-align: left;
+  /* Aligns text to the left */
 }
+
 .tableHeader {
-  background-color: #f2f2f2; /* Light grey background for headers */
+  background-color: #f2f2f2;
+  /* Light grey background for headers */
 }
 
 .title {
@@ -290,18 +312,28 @@
 .filterSection {
   margin-bottom: 1.5rem;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 1rem;
+  width: 100%;
+}
+
+.filterGroup1 {
+  width: 250px;
 }
 
 .select {
   background: #374151;
   border: 1px solid #4b5563;
   color: #f9fafb;
-  padding: 0.5rem;
+  /* padding: 0.5rem; */
   border-radius: 6px;
   font-size: 0.875rem;
   min-width: 150px;
+}
+
+.selectTeam {
+  margin-right: 250px;
+
 }
 
 .select:focus {
@@ -339,7 +371,7 @@
   color: #9ca3af;
 }
 
-.mainCard{
+.mainCard {
   background: #1f2937;
   padding: 2rem;
   border-radius: 10px;
@@ -369,10 +401,13 @@
 .filterSection {
   margin-bottom: 1.5rem;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
+  flex-wrap: wrap;
 }
+
 
 .table {
   width: 100%;
@@ -483,7 +518,8 @@
   border-color: #60a5fa;
   box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2);
 }
-.link{
+
+.link {
   color: white;
   display: flex;
   justify-content: center;
@@ -568,6 +604,7 @@
 .input[type="file"]::-webkit-file-upload-button:hover {
   background-color: #6b7280;
 }
+
 .cards {
   display: flex;
   flex-wrap: wrap;
@@ -657,6 +694,7 @@
   padding: 0.75rem;
   border-bottom: 1px solid #374151;
   color: #f3f4f6;
+  background-color: #111827;
 }
 
 .status {
@@ -822,7 +860,8 @@
     gap: 1rem;
   }
 
-  .navLeft, .navRight {
+  .navLeft,
+  .navRight {
     width: 100%;
     justify-content: center;
     flex-wrap: wrap;
@@ -890,7 +929,9 @@
     font-size: 1.25rem;
   }
 
-  .input, .textarea, .select {
+  .input,
+  .textarea,
+  .select {
     padding: 0.5rem;
     font-size: 0.9rem;
   }
@@ -900,12 +941,14 @@
     font-size: 0.9rem;
   }
 
-  .adminBadge, .memberBadge {
+  .adminBadge,
+  .memberBadge {
     font-size: 0.65rem;
     padding: 0.15rem 0.4rem;
   }
 
-  .table th, .table td {
+  .table th,
+  .table td {
     padding: 0.5rem;
     font-size: 0.8rem;
   }
@@ -932,7 +975,8 @@
     max-width: 1000px;
   }
 }
-.backButton{
+
+.backButton {
   width: 50px;
   margin-right: 1200px;
   color: white;
@@ -947,115 +991,119 @@
 
 .sidebar {
   width: 280px;
-  min-width: 280px;
-  background: #1f2937;
+  height: 100vh;
+  background-color: #1f2937;
   border-right: 1px solid #374151;
+  position: fixed;
+  top: 0;
+  left: 0;
   display: flex;
   flex-direction: column;
-  position: fixed;
-  height: 100vh;
-  z-index: 1000;
-  overflow-y: auto;
-  overflow-x: hidden;
+  z-index: 50;
+  transition: transform 0.3s ease;
 }
 
-.sidebarHeader {
-  padding: 2rem 1.5rem 1.5rem;
+.sidebarLogo {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   border-bottom: 1px solid #374151;
 }
 
-.sidebarTitle {
+.sidebarLogoText {
+  font-size: 1.25rem;
+  font-weight: 600;
   color: #f3f4f6;
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
-  text-align: center;
 }
 
 .sidebarNav {
   flex: 1;
-  padding: 1rem 0;
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
 }
 
 .sidebarNavItem {
-  display: block;
-  color: #d1d5db;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: #9ca3af;
   text-decoration: none;
-  padding: 0.875rem 1.5rem;
-  margin: 0.25rem 0.75rem;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  border: 1px solid transparent;
-  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  margin-bottom: 0.5rem;
 }
 
 .sidebarNavItem:hover {
   background-color: #374151;
   color: #f3f4f6;
-  border-color: #4b5563;
 }
 
 .sidebarNavItem.active {
   background-color: #3b82f6;
   color: #ffffff;
-  border-color: #60a5fa;
 }
 
 .sidebarFooter {
   padding: 1.5rem;
   border-top: 1px solid #374151;
+  background-color: #111827;
 }
 
 .sidebarUser {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  color: #f3f4f6;
+  gap: 1rem;
   margin-bottom: 1rem;
 }
 
 .sidebarUserIcon {
   width: 40px;
   height: 40px;
-  background-color: #4b5563;
+  background-color: #4c1d95;
+  border: 1px solid #6d28d9;
+
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #f3f4f6;
-  font-size: 1rem;
+  color: #ffffff;
   font-weight: 600;
+  font-size: 1rem;
 }
 
 .sidebarUserInfo {
   flex: 1;
+  min-width: 0;
 }
 
 .sidebarUserName {
-  font-weight: 600;
-  margin: 0;
-  font-size: 0.9rem;
+  color: #f3f4f6;
+  font-weight: 500;
+  /* margin: 0; */
+  margin-left: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebarLogoutButton {
   width: 100%;
-  background: #374151;
-  color: #f3f4f6;
-  border: 1px solid #4b5563;
-  padding: 0.75rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: #374151;
+  color: #f3f4f6;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .sidebarLogoutButton:hover {
-  background-color: #ef4444;
-  border-color: #f87171;
+  background-color: #4b5563;
 }
 
 .mainContent {
@@ -1180,31 +1228,30 @@
 @media screen and (max-width: 768px) {
   .sidebar {
     transform: translateX(-100%);
-    transition: transform 0.3s ease;
   }
-  
+
   .sidebar.mobileOpen {
     transform: translateX(0);
   }
-  
+
   .sidebarOverlay.show {
     display: block;
   }
-  
+
   .mainContent {
     margin-left: 0;
     padding: 1rem;
   }
-  
+
   .mobileMenuButton {
     display: block;
   }
-  
+
   .dashboardTitle {
     font-size: 1.5rem;
     margin-top: 3rem;
   }
-  
+
   .statsGrid {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -1225,16 +1272,19 @@
     min-width: 600px;
   }
 }
-.titleContainer{
- 
+
+.titleContainer {
+
   gap: 22px;
 }
-.cardContainer{
-  margin-top: 80px ;
+
+.cardContainer {
+  margin-top: 80px;
   width: 100%;
 }
-.backButton{
- margin-top: 55px;
+
+.backButton {
+  margin-top: 55px;
 }
 
 /* Action Buttons */
@@ -1280,8 +1330,8 @@
   display: flex;
   /* gap: 0.5rem; */
   align-items: center;
-  justify-content: center; 
-   min-width: 160px;
+  justify-content: center;
+  min-width: 160px;
 }
 
 /* Button styles */
@@ -1440,7 +1490,7 @@
 /* Table styles */
 .tableContainer {
   width: 100%;
-  /* overflow-x: auto; */
+  overflow-x: auto;
   margin-top: 1.5rem;
   border-radius: 8px;
   border: 1px solid #374151;
@@ -1448,7 +1498,8 @@
 
 .table {
   width: 100%;
-  min-width: 800px; /* Minimum width to prevent squishing */
+  min-width: 800px;
+  /* Minimum width to prevent squishing */
   border-collapse: separate;
   border-spacing: 0;
 }
@@ -1565,6 +1616,7 @@
   .mainCard {
     padding: 1rem;
     border-radius: 8px;
+
   }
 
   .table td {
@@ -1590,13 +1642,14 @@
     max-width: 150px;
   }
 }
-.filterLabel{
+
+.filterLabel {
   color: white;
 }
 
 /* Essential styles for filter groups */
 .filterGroup {
-  display: flex;
+  /* display: flex; */
   align-items: center;
   gap: 0.75rem;
   min-width: fit-content;
@@ -1693,7 +1746,181 @@
     text-align: center;
   }
 }
-.filterContainer{
+
+.filterContainer {
   width: 100%;
   display: flex;
+}
+
+.table {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 1rem;
+  background: transparent;
+}
+
+.table table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 800px;
+  /* Ensure table has minimum width for all columns */
+}
+
+.table th,
+.table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  white-space: normal;
+  vertical-align: top;
+}
+
+.table th {
+  font-weight: 600;
+  color: #9ca3af;
+  background-color: rgba(255, 255, 255, 0.05);
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Mobile styles */
+@media screen and (max-width: 768px) {
+  .table {
+    margin: 0 -1rem;
+    /* Negative margin to allow full-width scrolling */
+    padding: 0 1rem;
+    width: calc(100% + 2rem);
+  }
+
+  .table:before {
+    content: '← Scroll horizontally →';
+    display: block;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #9ca3af;
+    padding: 0.5rem 0;
+  }
+
+  .table table {
+    margin: 0;
+  }
+
+  .table th,
+  .table td {
+    padding: 0.75rem;
+  }
+}
+
+/* Ensure content wraps properly on mobile */
+.tableCellContent {
+  max-width: 100px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Style for action buttons in table */
+.tableActions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* Add horizontal scroll indicator */
+.tableContainer {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.tableScrollIndicator {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .tableScrollIndicator {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(90deg, #3b82f6 0%, #3b82f6 50%, transparent 51%, transparent 100%);
+    background-size: 200% 100%;
+    animation: scroll 1.5s infinite linear;
+    opacity: 0.5;
+  }
+}
+
+@keyframes scroll {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.paginationContainer {
+  margin-top: 1rem;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--background-color);
+  border-radius: 0.5rem;
+}
+
+.paginationInfo {
+  color: white;
+  font-size: 0.9rem;
+}
+
+.paginationControls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.paginationButton {
+  padding: 0.5rem 1rem;
+  border: 1px solid black;
+  border-radius: 0.25rem;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.paginationButton:hover:not(:disabled) {
+  background-color: grey;
+}
+
+.paginationButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.pageNumber {
+  color: white;
+
+}
+
+.searchGroup {
+  padding: 20px;
+
+}
+
+.teamsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tableRow {
+  background-color: #121d33;
 }

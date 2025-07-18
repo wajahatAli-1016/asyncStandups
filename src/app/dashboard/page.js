@@ -30,29 +30,29 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       if (status !== 'authenticated') return;
-      
+
       try {
         // Fetch reminders
         const remindersResponse = await fetch('/api/reminders');
         const remindersData = await remindersResponse.json();
-        
+
         // Fetch invites
         const invitesResponse = await fetch('/api/invites');
         const invitesData = await invitesResponse.json();
 
-        const pendingReminders = remindersData.reminders?.filter(r => 
+        const pendingReminders = remindersData.reminders?.filter(r =>
           r.assignedTo[0]?.status === 'pending'
         ).length || 0;
-        
-        const completedReminders = remindersData.reminders?.filter(r => 
+
+        const completedReminders = remindersData.reminders?.filter(r =>
           r.assignedTo[0]?.status === 'completed'
         ).length || 0;
 
-        const pendingInvites = invitesData.invites?.filter(invite => 
+        const pendingInvites = invitesData.invites?.filter(invite =>
           invite.status === 'pending'
         ).length || 0;
 
-        const teamsJoined = invitesData.invites?.filter(invite => 
+        const teamsJoined = invitesData.invites?.filter(invite =>
           invite.status === 'accepted'
         ).length || 0;
 
@@ -88,13 +88,13 @@ export default function Dashboard() {
   return (
     <div className={styles.sidebarLayout}>
       <MemberSidebar />
-      
+
       <main className={styles.mainContent}>
         {/* Dashboard Header */}
         <div className={styles.dashboardHeader}>
           <h1 className={styles.dashboardTitle}>Member Dashboard</h1>
           <p className={styles.dashboardSubtitle}>
-            Welcome back, {session.user.name}! Here's your activity overview.
+            Welcome, {session.user.name} Here's your activity overview.
           </p>
         </div>
 
@@ -105,7 +105,7 @@ export default function Dashboard() {
             <p className={styles.statValue}>{stats.pendingReminders}</p>
           </div>
           <div className={styles.statCard}>
-            <h3 className={styles.statTitle}>Completed Tasks</h3>
+            <h3 className={styles.statTitle}>Completed Reminders</h3>
             <p className={styles.statValue}>{stats.completedReminders}</p>
           </div>
           <div className={styles.statCard}>
@@ -121,19 +121,19 @@ export default function Dashboard() {
         {/* Quick Actions */}
         <div className={styles.quickActions}>
           <h2 className={styles.quickActionsTitle}>Quick Actions</h2>
-          
+
           <Link href="/dashboard/submit-standup" className={styles.quickActionButton}>
             📝 Submit Daily Standup
           </Link>
-          
+
           <Link href="/dashboard/reminder" className={styles.quickActionButton}>
             ⏰ Check My Reminders
           </Link>
-          
+
           <Link href="/dashboard/join-team" className={styles.quickActionButton}>
             👥 Join a Team
           </Link>
-          
+
           <Link href="/dashboard/invites" className={styles.quickActionButton}>
             📧 View Team Invites
           </Link>
@@ -142,24 +142,24 @@ export default function Dashboard() {
         {/* Recent Activity Card */}
         <div className={styles.quickActions} style={{ marginTop: '2rem' }}>
           <h2 className={styles.quickActionsTitle}>Recent Activity</h2>
-          
+
           {stats.pendingReminders > 0 && (
-            <div style={{ 
-              padding: '1rem', 
-              backgroundColor: '#374151', 
-              borderRadius: '6px', 
+            <div style={{
+              padding: '1rem',
+              backgroundColor: '#374151',
+              borderRadius: '6px',
               marginBottom: '0.5rem',
               color: '#f3f4f6'
             }}>
               <strong>⏰ {stats.pendingReminders}</strong> reminder(s) need your attention
             </div>
           )}
-          
+
           {stats.pendingInvites > 0 && (
-            <div style={{ 
-              padding: '1rem', 
-              backgroundColor: '#374151', 
-              borderRadius: '6px', 
+            <div style={{
+              padding: '1rem',
+              backgroundColor: '#374151',
+              borderRadius: '6px',
               marginBottom: '0.5rem',
               color: '#f3f4f6'
             }}>
@@ -168,10 +168,10 @@ export default function Dashboard() {
           )}
 
           {stats.pendingReminders === 0 && stats.pendingInvites === 0 && (
-            <div style={{ 
-              padding: '1rem', 
-              backgroundColor: '#065f46', 
-              borderRadius: '6px', 
+            <div style={{
+              padding: '1rem',
+              backgroundColor: '#065f46',
+              borderRadius: '6px',
               color: '#d1fae5',
               textAlign: 'center'
             }}>

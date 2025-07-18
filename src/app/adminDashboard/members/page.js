@@ -21,6 +21,10 @@ export default function AdminMembersPage() {
   const [sortBy, setSortBy] = useState('name');
   const [sortOrder, setSortOrder] = useState('asc');
   
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [membersPerPage] = useState(10);
+  
   // Edit modal state
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
@@ -281,6 +285,7 @@ export default function AdminMembersPage() {
           <div className={styles.filterContainer}>
           <div className={styles.filterSection}>
             <div className={styles.filterGroup}>
+              <div className={styles.filterGroup1}> 
               <label className={styles.filterLabel}>Filter by Team:</label>
               <select
                 className={styles.select}
@@ -294,6 +299,7 @@ export default function AdminMembersPage() {
                   </option>
                 ))}
               </select>
+              </div>
             </div>
 
             <div className={styles.filterGroup}>
@@ -301,7 +307,7 @@ export default function AdminMembersPage() {
               <div className={styles.searchContainer}>
                 <input
                   type="text"
-                  className={styles.searchInput}
+                  className={styles.searchInput + ' ' + styles.searchGroup}
                   placeholder="Search by name, email, role, team, or timezone..."
                   value={searchTerm}
                   onChange={handleSearchChange}
@@ -333,74 +339,111 @@ export default function AdminMembersPage() {
           </div>
           </div>
 
-          {/* Results summary */}
-          <div className={styles.resultsInfo}>
-            <span className={styles.resultsText}>
-              Showing {filteredMembers.length} of {members.length} members
-              {searchTerm && ` matching "${searchTerm}"`}
-            </span>
-          </div>
+         
 
+          {/* Members Table */}
           {filteredMembers.length > 0 ? (
-            <div className={styles.tableContainer}>
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Team</th>
-                    <th>Role</th>
-                    <th>Joined Date</th>
-                    <th>Timezone</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredMembers.map(member => (
-                    <tr key={member.id}>
-                      <td>
-                        <span className={styles.tableCellText}>{member.name}</span>
-                      </td>
-                      <td>
-                        <span className={styles.tableCellText}>{member.email}</span>
-                      </td>
-                      <td>
-                        <span className={styles.tableCellText}>
-                          {member.team?.name || 'No Team'}
-                        </span>
-                      </td>
-                      <td>
-                        <span className={`${styles.badge} ${styles[member.role]}`}>
-                          {member.role}
-                        </span>
-                      </td>
-                      <td>
-                        <span className={styles.tableCellText}>
-                          {formatDate(member.createdAt)}
-                        </span>
-                      </td>
-                      <td>
-                        <span className={styles.tableCellText}>{member.timezone}</span>
-                      </td>
-                      <td>
-                        <div className={styles.actionButtons}>
-                          <button className={styles.editButton} onClick={() => openEditModal(member)}>Edit</button>
-                          <button className={styles.deleteButton} onClick={() => handleDelete(member.id)}>Delete</button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <>
+              <div className={styles.tableContainer}>
+                <div className={styles.table}>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Team</th>
+                        <th>Timezone</th>
+                        <th>Joined Date</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredMembers
+                        .slice((currentPage - 1) * membersPerPage, currentPage * membersPerPage)
+                        .map(member => (
+                        <tr key={member.id}>
+                          <td>
+                            <div className={styles.tableCellContent}>
+                              {member.name}
+                            </div>
+                          </td>
+                          <td>
+                            <div className={styles.tableCellContent}>
+                              {member.email}
+                            </div>
+                          </td>
+                          <td>
+                            <div className={styles.tableCellContent}>
+                              <span className={`${styles.badge} ${styles[member.role]}`}>
+                                {member.role}
+                              </span>
+                            </div>
+                          </td>
+                          <td>
+                            <div className={styles.tableCellContent}>
+                              {member.team?.name || 'No Team'}
+                            </div>
+                          </td>
+                          <td>
+                            <div className={styles.tableCellContent}>
+                              {member.timezone}
+                            </div>
+                          </td>
+                          <td>
+                            <div className={styles.tableCellContent}>
+                              {formatDate(member.createdAt)}
+                            </div>
+                          </td>
+                          <td>
+                            <div className={styles.tableActions}>
+                              <button
+                                onClick={() => openEditModal(member)}
+                                className={styles.editButton}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDelete(member.id)}
+                                className={styles.deleteButton}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <div className={styles.tableScrollIndicator} />
+              </div>
+              <div className={styles.paginationContainer}>
+                <div className={styles.paginationInfo}>
+                  Showing {Math.min((currentPage - 1) * membersPerPage + 1, filteredMembers.length)} - {Math.min(currentPage * membersPerPage, filteredMembers.length)} of {filteredMembers.length} members
+                </div>
+                <div className={styles.paginationControls}>
+                  <button
+                    className={styles.paginationButton}
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                  >
+                    Previous
+                  </button>
+                  <span className={styles.pageNumber}>Page {currentPage} of {Math.ceil(filteredMembers.length / membersPerPage)}</span>
+                  <button
+                    className={styles.paginationButton}
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredMembers.length / membersPerPage)))}
+                    disabled={currentPage >= Math.ceil(filteredMembers.length / membersPerPage)}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </>
           ) : (
             <div className={styles.noData}>
-              <p>
-                {searchTerm 
-                  ? `No members found matching "${searchTerm}"` 
-                  : 'No members found'
-                }
-              </p>
+              <p>No members found</p>
             </div>
           )}
         </div>

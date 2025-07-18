@@ -128,7 +128,7 @@ const pathname = usePathname();
 
                     {error && <p className={styles.error}>{error}</p>}
 
-                    <div className={styles.filterSection}>
+                    <div className={styles.filterSection + ' ' + styles.teamsContainer}>
 
 
 

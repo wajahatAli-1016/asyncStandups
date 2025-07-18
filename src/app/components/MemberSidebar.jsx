@@ -3,7 +3,9 @@ import { useState } from 'react';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from '../../../page.module.css';
+import logo from '../../../public/clock.png';
 
 const MemberSidebar = () => {
   const { data: session } = useSession();
@@ -63,11 +65,40 @@ const MemberSidebar = () => {
 
       {/* Sidebar */}
       <div className={`${styles.sidebar} ${isMobileOpen ? styles.mobileOpen : ''}`}>
-        {/* Sidebar Header with User Info */}
-        <div className={styles.sidebarHeader}>
+        {/* Logo at the top */}
+        <div className={styles.sidebarLogo}>
+          <Image
+            src={logo}
+            alt="Logo"
+            width={40}
+            height={40}
+            priority
+          />
+          <span className={styles.sidebarLogoText}>Async Meetings</span>
+        </div>
+
+        {/* Navigation */}
+        <nav className={styles.sidebarNav}>
+          {navigation.map((item) => (
+            <Link
+              key={item.name}
+              href={item.href}
+              className={`${styles.sidebarNavItem} ${
+                pathname === item.href ? styles.active : ''
+              }`}
+              onClick={closeMobileSidebar}
+            >
+              <span style={{ marginRight: '0.75rem' }}>{item.icon}</span>
+              {item.name}
+            </Link>
+          ))}
+        </nav>
+
+        {/* User Info and Logout at the bottom */}
+        <div className={styles.sidebarFooter}>
           {session && (
             <div className={styles.sidebarUser}>
-              <div className={styles.sidebarUserIcon}>
+              <div className={styles.memberSidebarUserName}>
                 {getInitials(session.user?.name)}
               </div>
               <div className={styles.sidebarUserInfo}>
@@ -98,23 +129,6 @@ const MemberSidebar = () => {
             Logout
           </button>
         </div>
-
-        {/* Navigation */}
-        <nav className={styles.sidebarNav}>
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={`${styles.sidebarNavItem} ${
-                pathname === item.href ? styles.active : ''
-              }`}
-              onClick={closeMobileSidebar}
-            >
-              <span style={{ marginRight: '0.75rem' }}>{item.icon}</span>
-              {item.name}
-            </Link>
-          ))}
-        </nav>
       </div>
     </>
   );

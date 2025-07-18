@@ -3,6 +3,7 @@ import Link from 'next/link';
 import styles from '../../../../page.module.css'
 import { useState } from 'react';
 import back from '../../../../public/back-button.png'
+import MemberSidebar from '@/app/components/MemberSidebar';
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -73,9 +74,10 @@ export default function Home() {
   };
 
   return (
-    <div className={styles.container}>
-       <Link href="/adminDashboard"> <img className={styles.backButton} src={back.src}/></Link>
-      <div className={styles.card}>
+    <div className={styles.sidebarLayout}>
+      <MemberSidebar/>
+      <main className={styles.mainContent}>
+      <div className={styles.mainCard}>
         <h1 className={styles.title}>Daily Updates</h1>
         {error && <p className={styles.error}>{error}</p>}
         <form className={styles.form} autoComplete="off" onSubmit={handleSubmit}>
@@ -150,6 +152,7 @@ export default function Home() {
           </button>
         </form>
       </div>
+      </main>
     </div>
   );
 }
