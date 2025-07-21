@@ -94,7 +94,7 @@ export default function Dashboard() {
         <div className={styles.dashboardHeader}>
           <h1 className={styles.dashboardTitle}>Member Dashboard</h1>
           <p className={styles.dashboardSubtitle}>
-            Welcome, {session.user.name} Here's your activity overview.
+            Welcome, {session.user.name} Here&apos;s your activity overview.
           </p>
         </div>
 
