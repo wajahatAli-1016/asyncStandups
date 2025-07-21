@@ -373,7 +373,7 @@ export default function MemberRemindersPage() {
           {reminders.length === 0 && !isLoading && (
             <div className={styles.noData}>
               <h3>No Reminders</h3>
-              <p>You don't have any reminders assigned at the moment.</p>
+              <p>You don&apos;t have any reminders assigned at the moment.</p>
               <p>When your team admin creates reminders for you, they will appear here.</p>
             </div>
           )}
