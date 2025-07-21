@@ -209,7 +209,7 @@ export default function JoinTeamPage() {
         {invites.length === 0 && !isLoading && (
           <div className={styles.noData}>
             <h3>No Team Invitations</h3>
-            <p>You don't have any team invitations at the moment.</p>
+            <p>You don&apos;t have any team invitations at the moment.</p>
             <p>Ask a team admin to invite you to their team.</p>
           </div>
         )}
@@ -217,7 +217,7 @@ export default function JoinTeamPage() {
         {/* Only Accepted Invites Message */}
         {invites.length > 0 && pendingInvites.length === 0 && acceptedInvites.length > 0 && (
           <div className={styles.content}>
-            <p>All your invitations have been accepted. You're part of {acceptedInvites.length} team(s)!</p>
+            <p>All your invitations have been accepted. You&apos;re part of {acceptedInvites.length} team(s)!</p>
           </div>
         )}
       </div>
