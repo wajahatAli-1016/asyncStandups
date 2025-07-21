@@ -88,7 +88,7 @@ export default function AdminDashboard() {
         <div className={styles.dashboardHeader}>
           <h1 className={styles.dashboardTitle}>Admin Dashboard</h1>
           <p className={styles.dashboardSubtitle}>
-            Welcome back, {session.user.name}! Here's an overview of your teams and activities.
+            Welcome back, {session.user.name}! Here&apos;s an overview of your teams and activities.
           </p>
         </div>
 
