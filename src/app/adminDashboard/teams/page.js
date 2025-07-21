@@ -133,7 +133,7 @@ const pathname = usePathname();
 
 
                         {teams.map(team => (
-                           <table border={1} className={styles.table}>
+                           <table key={team._id} border={1} className={styles.table}>
                             <thead className={styles.tableHeader}>
                                 <tr className={styles.tableRow}>
                                     <th className={styles.tableHeaderCell}>Team name</th>
