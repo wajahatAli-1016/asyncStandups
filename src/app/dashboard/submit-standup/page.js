@@ -14,6 +14,33 @@ export default function Home() {
   const [files, setFiles] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState({});
+
+  // Regex to check if field contains only whitespace
+  const whitespaceOnlyRegex = /^\s*$/;
+
+  function validateStandupForm() {
+    const fields = [
+      { id: 'yesterday', name: 'yesterday', value: formData.yesterday },
+      { id: 'today', name: 'today', value: formData.today },
+      { id: 'blockers', name: 'blockers', value: formData.blockers }
+    ];
+    
+    const errors = {};
+    let isValid = true;
+
+    for (const field of fields) {
+      if (whitespaceOnlyRegex.test(field.value)) {
+        errors[field.name] = `Field cannot be empty or contain only spaces`;
+        isValid = false;
+      } else {
+        errors[field.name] = '';
+      }
+    }
+
+    setFieldErrors(errors);
+    return isValid;
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -21,6 +48,14 @@ export default function Home() {
       ...prev,
       [name]: value
     }));
+
+    // Clear field error when user starts typing
+    if (fieldErrors[name]) {
+      setFieldErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
   };
 
   const handleFileChange = (e) => {
@@ -32,6 +67,12 @@ export default function Home() {
     e.preventDefault();
     setIsSubmitting(true);
     setError('');
+
+    // Validate form before submission
+    if (!validateStandupForm()) {
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
       const formDataToSend = new FormData();
@@ -63,6 +104,7 @@ export default function Home() {
         blockers: '',
       });
       setFiles([]);
+      setFieldErrors({});
       
       alert('Standup submitted successfully!');
 
@@ -83,10 +125,11 @@ export default function Home() {
         <form className={styles.form} autoComplete="off" onSubmit={handleSubmit}>
           <div className={styles.formGroup}>
             <label className={styles.label}>
-              Yesterday's details
+              Yesterday&apos;s details
             </label>
             <textarea 
-              className={styles.textarea}
+              className={`${styles.textarea} ${fieldErrors.yesterday ? styles.inputError : ''}`}
+              id='yesterday'
               name="yesterday"
               value={formData.yesterday}
               onChange={handleInputChange}
@@ -94,12 +137,16 @@ export default function Home() {
               required
               rows={4}
             />
+            {fieldErrors.yesterday && (
+              <span className={styles.fieldError}>{fieldErrors.yesterday}</span>
+            )}
           </div>
           
           <div className={styles.formGroup}>
-            <label className={styles.label}>Today's details</label>
+            <label className={styles.label}>Today&apos;s details</label>
             <textarea 
-              className={styles.textarea}
+              className={`${styles.textarea} ${fieldErrors.today ? styles.inputError : ''}`}
+              id='today'
               name="today"
               value={formData.today}
               onChange={handleInputChange}
@@ -107,12 +154,16 @@ export default function Home() {
               required
               rows={4}
             /> 
+            {fieldErrors.today && (
+              <span className={styles.fieldError}>{fieldErrors.today}</span>
+            )}
           </div>
 
           <div className={styles.formGroup}>
             <label className={styles.label}>Any blockers?</label>
             <textarea 
-              className={styles.textarea}
+              className={`${styles.textarea} ${fieldErrors.blockers ? styles.inputError : ''}`}
+              id='blockers'
               name="blockers"
               value={formData.blockers}
               onChange={handleInputChange}
@@ -120,6 +171,9 @@ export default function Home() {
               required
               rows={4}
             /> 
+            {fieldErrors.blockers && (
+              <span className={styles.fieldError}>{fieldErrors.blockers}</span>
+            )}
           </div>
 
           <div className={styles.formGroup}>
