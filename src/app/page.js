@@ -125,7 +125,7 @@ export default function Home() {
           </div>
 
           <Link href={'/signup'} className={styles.link}>
-            Don't have an account? Sign up
+            Don&apos;t have an account? Sign up
           </Link>
           
           <button 
